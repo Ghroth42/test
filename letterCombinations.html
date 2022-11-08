@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <div>
+        input: <input type="text" id="input">
+    </div>
+
+    <div>
+        output:
+        <div id="box"></div>
+    </div>
+
+    <script>
+
+        const letterCombinations = function (digits) {
+            const k = digits.length;
+            const map = ["0", "1", "ABC", "DEF", "GHI", "JKL", "MNO", "PQRS", "TUV", "WXYZ"];
+            if (!k) return [];
+            if (k === 1) return map[digits].split("");
+
+            const res = [], path = [];
+            backtracking(digits, k, 0);
+            return res;
+
+            function backtracking(n, k, a) {
+                if (path.length === k) {
+                    res.push(path.join(""));
+                    return;
+                }
+                for (const v of map[n[a]]) {
+                    path.push(v);
+                    backtracking(n, k, a + 1);
+                    path.pop();
+                }
+            }
+        };
+
+        const fn = (str) => {
+            str = str.split('.')
+            if (str.length === 1) {
+                return letterCombinations(str[0])
+            }
+
+            if (str.length === 2) {
+                let [arrA, arrB] = str.map(v => letterCombinations(v))
+                let arr = []
+                arrA.forEach(v => {
+                    arrB.forEach(item => {
+                        arr.push([v, item].join('-'))
+                    })
+                })
+                return arr;
+            }
+
+            if (str.length === 3) {
+                let [arrA, arrB, arrC] = str.map(v => letterCombinations(v))
+                let arr = []
+                arrA.forEach(v => {
+                    arrB.forEach(item => {
+                        arrC.forEach(j => {
+                            arr.push([v, item, j].join('-'))
+                        })
+                    })
+                })
+                return arr;
+            }
+
+        }
+
+        const input = document.querySelector('#input')
+        const output = document.querySelector('#output')
+        const box = document.querySelector('#box')
+
+        input.addEventListener('change', function (e) {
+            let val = e.target.value;
+            let r = fn(val)
+
+            let html = '';
+            r.forEach(v => {
+                html += `<p>${v}</p>`
+            })
+            box.innerHTML = html;
+        })
+
+    </script>
+
+</body>
+
+</html>
